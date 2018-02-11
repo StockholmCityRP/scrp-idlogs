@@ -32,7 +32,7 @@ AddEventHandler('idlogs:register', function()
 			})
 		else
 			-- keep database updated
-			MySQL.Sync.execute("UPDATE account_info SET rp_name=@rp_name, SET steam_name=@steam_name, SET ipv4=@ipv4 WHERE steam64_hex=@steam64_hex",
+			MySQL.Sync.execute("UPDATE account_info SET rp_name=@rp_name, steam_name=@steam_name, ipv4=@ipv4 WHERE steam64_hex=@steam64_hex",
 			{
 				['@steam64_hex'] = steam64,
 				['@rp_name'] = rp_name,
