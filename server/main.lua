@@ -19,12 +19,8 @@ AddEventHandler('idlogs:register', function()
 			ipv4 = string.sub(foundID, 4)
 		end
 	end
-	print(steam64)
-	print(rp_name)
-	print(steam_name)
-	print(rockstar)
-	print(ipv4)
-	MySQL.Async.fetchAll('SELECT * FROM account_info WHERE steam64_hex=@id', {['@id'] = steam64}, function(gotInfo)
+	
+	MySQL.Async.fetchAll('SELECT * FROM account_info WHERE steam64_hex=@steam64_hex', {['@steam64_hex'] = steam64}, function(gotInfo)
 		if gotInfo[1] == nil then
 			MySQL.Async.execute("INSERT INTO account_info (steam64_hex,rp_name, steam_name, rockstar, ipv4) VALUES (@steam64_hex,@rp_name,@steam_name,@rockstar,@ipv4)",
 			{
@@ -32,6 +28,15 @@ AddEventHandler('idlogs:register', function()
 				['@rp_name'] = rp_name,
 				['@steam_name'] = steam_name,
 				['@rockstar'] = rockstar,
+				['@ipv4'] = ipv4
+			})
+		else
+			-- keep database updated
+			MySQL.Sync.execute("UPDATE account_info SET rp_name=@rp_name, SET steam_name=@steam_name, SET ipv4=@ipv4 WHERE steam64_hex=@steam64_hex",
+			{
+				['@steam64_hex'] = steam64,
+				['@rp_name'] = rp_name,
+				['@steam_name'] = steam_name,
 				['@ipv4'] = ipv4
 			})
 		end
@@ -46,7 +51,7 @@ function getIdentity(source)
 		local identity = result[1]
 
 		return {
-			name = identity['firstname'] .. identity['lastname']
+			name = identity['firstname'] .. ' ' .. identity['lastname']
 		}
 	else
 		return {
