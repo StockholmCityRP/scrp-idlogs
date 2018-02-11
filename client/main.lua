@@ -4,5 +4,5 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 AddEventHandler('playerSpawned', function(spawn)
-	TriggerServerEvent('idlogs:register')
+	TriggerServerEvent('idlogs:register', -1)
 end)
