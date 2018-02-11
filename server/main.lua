@@ -6,12 +6,13 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 -- send to jail and register in database
 RegisterServerEvent('idlogs:register')
 AddEventHandler('idlogs:register', function(source)
-	local steam64 = GetPlayerIdentifiers(source)[1]
-	local rp_name = getIdentity(source).name
-	local steam_name = GetPlayerName(source)
+	local player = source
+	local steam64 = GetPlayerIdentifiers(player)[1]
+	local rp_name = getIdentity(player).name
+	local steam_name = GetPlayerName(player)
 	local rockstar = nil
 	local ipv4 = nil
-	for _, foundID in ipairs(GetPlayerIdentifiers(source)) do
+	for _, foundID in ipairs(GetPlayerIdentifiers(player)) do
 		if string.match(v, "license:") then
 			rockstar = foundID
 		elseif string.match(v, "ip:") then
