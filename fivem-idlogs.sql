@@ -1,0 +1,8 @@
+CREATE TABLE account_info (
+	steam64_hex VARCHAR(30) DEFAULT NULL,
+	rp_name VARCHAR(100) DEFAULT NULL,
+	steam_name VARCHAR(100) DEFAULT NULL,
+	rockstar VARCHAR(50) DEFAULT NULL,
+	ipv4 VARCHAR(20) DEFAULT NULL,
+	PRIMARY KEY (steam64_hex)
+);
