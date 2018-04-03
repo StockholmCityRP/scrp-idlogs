@@ -1,8 +1,14 @@
-ESX = nil
+local minutesToWait = 10
 
---ESX base
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+-- register when ready
+Citizen.CreateThread(function()
+	Citizen.Wait(1000)
+	TriggerServerEvent('scrp-idlogs:register')
+end)
 
-AddEventHandler('playerSpawned', function(spawn)
-	TriggerServerEvent('idlogs:register', -1)
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(1000 * 60 * minutesToWait)
+		TriggerServerEvent('scrp-idlogs:updateTime', minutesToWait)
+	end
 end)

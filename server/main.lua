@@ -1,18 +1,14 @@
-ESX = nil
-
---ESX base
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
--- send to jail and register in database
-RegisterServerEvent('idlogs:register')
-AddEventHandler('idlogs:register', function()
-	local player = source
-	local steam64 = GetPlayerIdentifiers(player)[1]
-	local rp_name = getIdentity(player).name
-	local steam_name = GetPlayerName(player)
+RegisterServerEvent('scrp-idlogs:register')
+AddEventHandler('scrp-idlogs:register', function()
+	local _source = source
+	
+	local steam64 = GetPlayerIdentifiers(_source)[1]
+	local rp_name = getRoleplayName(_source)
+	local steam_name = GetPlayerName(_source)
 	local rockstar = nil
 	local ipv4 = nil
-	for _, foundID in ipairs(GetPlayerIdentifiers(player)) do
+	
+	for _, foundID in ipairs(GetPlayerIdentifiers(_source)) do
 		if string.match(foundID, "license:") then
 			rockstar = string.sub(foundID, 9)
 		elseif string.match(foundID, "ip:") then
@@ -43,19 +39,33 @@ AddEventHandler('idlogs:register', function()
 	end)
 end)
 
--- get identity from esx_identity
-function getIdentity(source)
+RegisterServerEvent('scrp-idlogs:updateTime')
+AddEventHandler('scrp-idlogs:updateTime', function(minutesOnline)
+	local _source = source
+	local steam64 = GetPlayerIdentifiers(_source)[1]
+	
+	MySQL.Async.fetchAll('SELECT * FROM account_info WHERE steam64_hex=@steam64_hex', {['@steam64_hex'] = steam64}, function(gotInfo)
+		
+		-- is the player found?
+		if gotInfo[1] ~= nil then
+			local playedTime = tonumber(gotInfo[1].online_time) + tonumber(minutesOnline)
+			MySQL.Sync.execute("UPDATE account_info SET online_time=@online_time WHERE steam64_hex=@steam64_hex",
+			{
+				['@steam64_hex'] = steam64,
+				['@online_time'] = playedTime,
+			})
+		end
+	end)
+end)
+
+-- get rp name from esx_identity
+function getRoleplayName(source)
 	local identifier = GetPlayerIdentifiers(source)[1]
-	local result = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = identifier})
+	local result = MySQL.Sync.fetchAll("SELECT * FROM characters WHERE identifier = @identifier", {['@identifier'] = identifier})
 	if result[1] ~= nil then
 		local identity = result[1]
-
-		return {
-			name = identity['firstname'] .. ' ' .. identity['lastname']
-		}
+		return identity['firstname'] .. ' ' .. identity['lastname']
 	else
-		return {
-			name = 'Unknown'
-		}
+		return 'Unknown'
 	end
 end
