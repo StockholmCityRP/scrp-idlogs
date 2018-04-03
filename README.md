@@ -4,10 +4,11 @@ Log FiveM user information in a SQL database when the player connects
 # What does it log?
 - Steam id 64 in hex
 - Rockstar license
-- IPV4
-- Last connection time
+- IPv4
+- Last connection time (doesn't fully work)
 - Steam name
 - RP name
+- Total time played in minutes
 
 # Installation
 - Clone the project
