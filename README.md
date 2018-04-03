@@ -1,4 +1,4 @@
-# fivem-idlogs
+# scrp-idlogs
 Log FiveM user information in a SQL database when the player connects
 
 # What does it log?
