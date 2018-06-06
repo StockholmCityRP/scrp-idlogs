@@ -16,8 +16,8 @@ AddEventHandler('scrp-idlogs:register', function()
 		end
 	end
 	
-	MySQL.Async.fetchAll('SELECT * FROM account_info WHERE steam64_hex=@steam64_hex', {['@steam64_hex'] = steam64}, function(gotInfo)
-		if gotInfo[1] == nil then
+	MySQL.Async.fetchAll('SELECT * FROM account_info WHERE steam64_hex=@steam64_hex', {['@steam64_hex'] = steam64}, function(result)
+		if result[1] == nil then
 			MySQL.Async.execute("INSERT INTO account_info (steam64_hex,rp_name, steam_name, rockstar, ipv4) VALUES (@steam64_hex,@rp_name,@steam_name,@rockstar,@ipv4)",
 			{
 				['@steam64_hex'] = steam64,
@@ -44,11 +44,11 @@ AddEventHandler('scrp-idlogs:updateTime', function(minutesOnline)
 	local _source = source
 	local steam64 = GetPlayerIdentifiers(_source)[1]
 	
-	MySQL.Async.fetchAll('SELECT * FROM account_info WHERE steam64_hex=@steam64_hex', {['@steam64_hex'] = steam64}, function(gotInfo)
+	MySQL.Async.fetchAll('SELECT * FROM account_info WHERE steam64_hex=@steam64_hex', {['@steam64_hex'] = steam64}, function(result)
 		
 		-- is the player found?
-		if gotInfo[1] ~= nil then
-			local playedTime = tonumber(gotInfo[1].online_time) + tonumber(minutesOnline)
+		if result[1] ~= nil then
+			local playedTime = tonumber(result[1].online_time) + tonumber(minutesOnline)
 			MySQL.Sync.execute("UPDATE account_info SET online_time=@online_time WHERE steam64_hex=@steam64_hex",
 			{
 				['@steam64_hex'] = steam64,
